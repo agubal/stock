@@ -1,0 +1,111 @@
+﻿<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ng-click="start()" style="cursor: pointer">Andrey Gubal</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li ng-class="{'active': page == pages.start}" style="cursor: pointer"><a ng-click="start()">Main</a></li>
+                <li ng-class="{'active': page == pages.stockDetails}" style="cursor: pointer"><a ng-click="enterStockDetails()">New calculation</a></li>
+                <li ng-class="{'active': page == pages.calculations}"><a style="cursor: pointer" ng-click="veiwClculatedResults()">All results</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="row" ng-init="start()">
+    <div class="col-md-12">
+        <h2>{{pageTitle}}</h2>
+    </div>
+</div>
+
+<div class="row" ng-if="page == pages.start">
+    <div class="col-md-2">
+        <button class="btn btn-default" ng-click="enterStockDetails()">Enter stock details</button>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-default" ng-click="veiwClculatedResults()">View calculated result</button>
+    </div>
+</div>
+
+<div class="row" ng-if="page == pages.stockDetails">
+    <div class="col-md-4">
+        <form class="form-login" role="form">
+            <label class="label label-default">Stock name: </label>
+            <input type="text" class="form-control" placeholder="e.g. Apple" data-ng-model="stockData.Name">
+
+            <label class="label label-default">Price: </label>
+            <input type="number" step="0.01" min="0.01" class="form-control" data-ng-model="stockData.Price">
+
+            <label class="label label-default">Quantity: </label>
+            <input type="number" step="1" class="form-control" data-ng-model="stockData.Quantity">
+
+            <label class="label label-default">Percentage: </label>
+            <input type="number" step="0.01" min="0" class="form-control" data-ng-model="stockData.Percentage">
+
+            <label class="label label-default">Years: </label>
+            <input type="number" step="1" max="100" class="form-control" placeholder="Years" data-ng-model="stockData.Years">
+
+            <button class="btn btn-lg btn-success btn-block" type="submit" data-ng-click="calculate()">Calculate</button>
+            <div data-ng-hide="errorMessage == ''" class="alert alert-danger">
+                {{errorMessage}}
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row" ng-if="page == pages.calculations">
+    <div class="col-md-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Percentage</th>
+                    <th>Years</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in stockDatas" ng-click="getCalculations(item)" style="cursor: pointer">
+                    <td>{{item.Name}}</td>
+                    <td>{{item.Price | currency:""}}</td>
+                    <td>{{item.Quantity}}</td>
+                    <td>{{item.Percentage | currency:""}}</td>
+                    <td>{{item.Years}}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <div data-ng-hide="errorMessage == ''" class="alert alert-danger">
+            {{errorMessage}}
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-if="calculationResultIsVisible">
+    <div class="col-md-4">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in stockData.Calculations">
+                    <td>{{item.Year}}</td>
+                    <td>{{item.Value | currency:""}}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
